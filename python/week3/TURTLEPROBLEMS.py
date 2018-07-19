@@ -1,0 +1,50 @@
+import turtle
+def clock():
+    bob = turtle.Turtle()
+    bob.left(90)
+    for i in range(0, 360, 30):
+        bob.setheading(i)
+        bob.penup()
+        bob.forward(100)
+        bob.pendown()
+        bob.forward(50)
+        bob.penup()
+        bob.forward(25)
+        bob.stamp()
+        bob.setposition(0, 0)
+
+
+clock()
+
+def rings():
+    red = turtle.Turtle()
+    blue = turtle.Turtle()
+    black = turtle.Turtle()
+    yellow = turtle.Turtle()
+    green = turtle.Turtle()
+    red.color("red")
+    blue.color("blue")
+    black.color("black")
+    yellow.color("yellow")
+    green.color("green")
+    red.penup()
+    blue.penup()
+    yellow.penup()
+    green.penup()
+
+    blue.setposition(-120, 0)
+    red.setposition(120, 0)
+    yellow.setposition(-60, -50)
+    green.setposition(60, -50)
+    black.circle(50, )
+
+    red.pendown()
+    red.circle(50, )
+    blue.pendown()
+    blue.circle(50, )
+    yellow.pendown()
+    yellow.circle(50, )
+    green.pendown()
+    green.circle(50, )
+rings()
+turtle.done()
