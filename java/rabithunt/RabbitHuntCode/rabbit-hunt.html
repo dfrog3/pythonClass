@@ -1,0 +1,255 @@
+<html>
+<head>
+<title>rabbit-hunt.html</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+<!--
+code {  font-family: "Courier New", Courier, mono; color: #993300}
+-->
+</style>
+</head>
+
+<body bgcolor="#FFFFFF">
+<table border="3" cellspacing="0" cellpadding="6" bgcolor="#FFDD99" bordercolor="#996633" width="100%">
+  <tr bordercolor="#996633"> 
+    <td height="60"><font size="+2"><strong>CIT 591 Fifth Java Assignment: Rabbit 
+      Hunt </strong></font><br>
+      CIT 591, David Matuszek, Fall 2002</td>
+  </tr>
+</table>
+<p><b><font size="+1">The purposes of this assignment are:</font></b></p>
+<ul>
+  <li>To improve your understanding of classes, objects, and inheritance</li>
+  <li>To give you more practice in reading code as well as writing code</li>
+  <li>To demonstrate non-algorithmic programming</li>
+</ul>
+<p><b><font size="+1">Here's the story:</font></b></p>
+<p>A <b>fox</b> is hunting a <b>rabbit</b> in a field. The field contains a number 
+  of <b>bushes</b> which obstruct both the fox's view and the rabbit's view, so 
+  each may or may not be able to see the other. The fox tries to catch the rabbit; 
+  the rabbit tries to get away from the fox. If the fox can catch the rabbit, 
+  he eats it (and wins). If the rabbit can keep away from the fox for 100 turns, 
+  the rabbit wins. </p>
+<p>You are the rabbit.</p>
+<p><font size="+1"><b>Getting started:</b></font></p>
+<p>Download the <a href="RabbitHunt.zip">RabbitHunt.zip</a> file and unzip it. 
+  It's a BlueJ package, so you should be able to run it easily; you will see something 
+  like this:</p>
+<p align="center"><img src="hunt.jpg" width="428" height="479"></p>
+<p>The big red dot represents the fox, the small brown dot is the rabbit, and 
+  the green blobs are bushes.</p>
+<p>Run the program a few times and see what happens. Notice that you can step 
+  through the hunt, or just let it run. You can adjust the speed at which the 
+  animation proceeds (this does not affect what happens, only how quickly it happens). 
+  Notice that the rabbit almost always meets an untimely end. However, occasionally 
+  the rabbit will evade the fox for 100 turns, and the rabbit wins--this doesn't 
+  happen very often.</p>
+<p>Now look at the<code> Rabbit </code>class. It has a constructor<code> Rabbit(model,&nbsp;row,&nbsp;column)</code>, 
+  and it has a method<code> decideMove()</code>, which decides how the rabbit 
+  is going to move at each turn. The rabbit I've given you is a really stupid 
+  rabbit--it just moves randomly.</p>
+<p>Your job is to improve the<code> Rabbit </code>class so that the rabbit escapes 
+  more often. This is your class; you can do (almost) anything you want with it. 
+  You can (and should!) look at all the other classes, but the<code> Rabbit </code>class 
+  is the only one you are allowed to change (unless you get my permission, which 
+  you won't get unless you have a very good reason). If you find errors or problems 
+  in the other classes, let me know, and I'll post an updated version for everybody.</p>
+<p>It is probably impossible to find a strategy for the rabbit that ensures a 
+  100% survival rate.</p>
+<p><b><font size="+1">Structure of the program</font></b></p>
+<p>This program uses the Model-View-Controller design pattern. That is, there 
+  are separate classes (which I have named<code> Model</code>,<code> View</code>, 
+  and<code> Controller </code>just for pedagogical purposes--they could have been 
+  named anything) that do the following:</p>
+<dl> 
+  <dt><code><b>Model</b></code></dt>
+  <dd>The <code>Model</code> represents the &quot;rules of the game.&quot; It 
+    does all the computation, all the work of deciding whose turn it is, what 
+    happens, and whether anyone has won. The <code>Model</code> is strictly &quot;internal&quot;--it 
+    does the &quot;thinking,&quot; and has practically nothing to do with the 
+    other parts of the program.</dd>
+  <dt><code><b>View</b></code></dt>
+  <dd>The <code>View</code> displays what is going on. It puts an image on the 
+    screen so the user can see what is happening. The <code>View</code> is completely 
+    passive; it does not affect the hunt in any way, it's just a news reporter 
+    that gives you a (partial) picture of what is happening inside the <code>Model</code>.</dd>
+  <dt><code><b>Controller</b></code></dt>
+  <dd>The <code>Controller</code> is the part of the program that displays the 
+    controls (the four buttons and the speed controls at the bottom of the window). 
+    It knows as little as possible about the <code>Model</code> and <code>View</code>; 
+    it basically tells the <code>Model</code> when to go and when to stop. It 
+    does, however, display a message at the end of the game; this should probably 
+    have been in the <code>View</code> class.</dd>
+</dl>
+<p>The &quot;Model&quot; part of this program is actually composed of <b>five</b> 
+  classes: <code>Model</code> (the &quot;main&quot; model class), <code>Animal</code>, 
+  <code>Rabbit</code>, <code>Fox</code>, and <code>Bush</code>. <code>Rabbit</code> 
+  and <code>Fox</code> are subclasses of <code>Animal</code> (as you can see from 
+  the solid arrows in the BlueJ diagram); all other classes just extend <code>Object</code>. 
+  This is the part of the program that you really need to understand. I'll describe 
+  these classes briefly, just to get you started; but you should examine the code 
+  to find out how it all really works and fits together.</p>
+<p>The <code>Controller</code> and <code>View</code> classes are almost entirely 
+  independent of the <code>Model</code> class. The <code>Rabbit</code> class is 
+  part of the Model. This means that you do <i>not</i> have to understand anything 
+  about either the Controller or the View in order to complete your assignment. 
+  (It wouldn't hurt to look at them, however, because you will be learning how 
+  to do similar things later in this course.)</p>
+<p>The<code> Hunt </code>class just creates<code> model</code>,<code> view</code>, 
+  and<code> controller </code>objects, and turns control over to the controller 
+  object.</p>
+<p>The <code>Model</code> class:</p>
+<ul>
+  <li>places the fox, rabbit, and bushes in the field</li>
+  <li>gives the rabbit and the fox each a chance to move (one moves, then the 
+    other--they don't both move at the same time)</li>
+  <li>tells the <code>View</code> to display the result of these two moves, and</li>
+  <li>determines which animal won</li>
+</ul>
+<p>In addition, <code>Model</code> provides several constants that you can use:</p>
+<blockquote>
+  <table border="1" cellspacing="0" cellpadding="4">
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.N</code></td>
+      <td>indicates &quot;north&quot; (straight up)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.NE</code></td>
+      <td>indicates &quot;northeast&quot; (up and to the right)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.E</code></td>
+      <td>indicates &quot;east&quot; (to the right)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.SE</code></td>
+      <td>indicates &quot;southeast&quot; (to the right and down)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.S</code></td>
+      <td>indicates &quot;south&quot; (straight down)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.SW</code></td>
+      <td>indicates &quot;southwest&quot; (to the left and down)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.W</code></td>
+      <td>indicates &quot;west&quot; (to the left)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.NW</code></td>
+      <td>indicates &quot;northwest&quot; (up and to the left)</td>
+    </tr>
+    <tr bgcolor="#FFFFCC"> 
+      <td><code>Model.STAY</code></td>
+      <td>indicates &quot;no move&quot;</td>
+    </tr>
+    <tr bgcolor="#CCFFCC"> 
+      <td><code>Model.MIN_DIRECTION</code></td>
+      <td>the numerically smallest direction (not including <code>STAY</code>)</td>
+    </tr>
+    <tr bgcolor="#CCFFCC"> 
+      <td><code>Model.MAX_DIRECTION</code></td>
+      <td>the numerically largest direction (not including <code>STAY</code>)</td>
+    </tr>
+    <tr bgcolor="#CCFFFF"> 
+      <td><code>Model.BUSH</code></td>
+      <td>indicates a bush</td>
+    </tr>
+    <tr bgcolor="#CCFFFF"> 
+      <td><code>Model.FOX</code></td>
+      <td>indicates a fox</td>
+    </tr>
+    <tr bgcolor="#CCFFFF"> 
+      <td><code>Model.RABBIT</code></td>
+      <td>indicates a rabbit</td>
+    </tr>
+    <tr bgcolor="#CCFFFF"> 
+      <td><code>Model.EDGE</code></td>
+      <td>indicates the edge of the board</td>
+    </tr>
+  </table>
+
+</blockquote>
+  
+<p align="left">Finally, <code>Model</code> provides the following method<code>:</code></p>
+<dl> 
+  <dt><code>static&nbsp;int&nbsp;turn(int&nbsp;direction,&nbsp;</code><code>int&nbsp;amount)</code></dt>
+  <dd>Given a starting direction and tne number of 1/8 turns to make <i>clockwise</i>, 
+    this method returns the resultant direction. </dd>
+</dl>
+<p>Other classes that form part of the Model are:</p>
+<dl> 
+  <dt><code>Bush</code></dt>
+  <dd>This <code></code>class doesn't do anything. The Model creates bushes and 
+    places them, but the bushes themselves just sit there and get in the way.</dd>
+  <dt><code>Animal</code></dt>
+  <dd>This is the superclass for both the <code>Rabbit</code> class and the <code>Fox</code> 
+    class. It provides methods that are the same for both the rabbit and the fox: 
+    looking in a particular direction, measuring the distance to an object, and 
+    moving.</dd>
+  <dt><code>Fox</code></dt>
+  <dd>The fox is an animal that tries to catch and eat the rabbit.</dd>
+  <dt><code>Rabbit</code></dt>
+  <dd>The rabbit is an animal that tries not to get caught and eaten.</dd>
+</dl>
+<p>The <code>Animal</code> class provides the following methods. Since <code>Fox</code> 
+  and <code>Rabbit</code> are subclasses of <code>Animal</code>, they <i>inherit</i> 
+  these methods, and can use them just as if they had defined the methods themselves.</p>
+<dl> 
+  <dt><code>int look(int direction)</code></dt>
+  <dd>Return one of the constants <code>Model.BUSH</code>, <code>Model.FOX</code>,<code> 
+    Model.RABBIT</code>, or <code>Model.EDGE</code>, depending on what the animal 
+    sees in that direction.</dd>
+  <dt> <code>int distance(int direction)</code></dt>
+  <dd>Returns the number of steps the animal would have to make in order to land 
+    on top of the nearest object (or go off the edge of the playing area).</dd>
+  <dt><code>boolean canMove(int direction)</code></dt>
+  <dd>Tells whether the animal can move in the given direction without being stopped 
+    by a bush or the edge of the board. Does <i>not</i> tell whether it's a good 
+    idea to move in that direction.</dd>
+</dl>
+<p><font size="+1"><b>The part you have to write:</b></font></p>
+<p>When it is the rabbit's turn to move, the model sends the message<code> decideMove() 
+  </code>to the rabbit. The rabbit must return a direction in which to move. I 
+  have written a<code> Rabbit </code>class, but my rabbit makes really stupid 
+  moves. Your job is to fix the<code> Rabbit </code>class by replacing my<code> 
+  decideMove() </code>method with a better one. </p>
+<p><i>Note that the rabbit does not actually move itself.</i> Instead, it responds 
+  to the<code> decideMove() </code>message by returning the direction in which 
+  it wants to move. The model will then move the rabbit in that direction, if 
+  the move is possible and legal. If the move cannot be made (because of a bush 
+  or the edge of the board), the rabbit will not move.</p>
+<p><font size="+1"><b>The contract:</b></font></p>
+<p>I'm putting the complete source code up on the web, <i>as it exists today.</i> 
+  I may change it. I probably <i>will</i> change it. There are some things I don't 
+  like about my code, and I expect to give you a new, improved version. How can 
+  you write your assignment if my code keeps changing?</p>
+<p>The answer is the <i>contract.</i> You are welcome to look at my code--in fact, 
+  much of the reason for this assignment is to get you to read someone else's 
+  code. I can change any part of my code in any way I like, so long as I satisfy 
+  the contract.</p>
+<p>So, what is this mysterious contract? The contract is <i>whatever I say about 
+  the program in the javadoc comments.</i> If I say in the javadoc comments that 
+  the program does something, it had better do that thing. Anything I don't say, 
+  I can change. For example, if I tell you in the javadoc comments that<code> 
+  Model.EDGE </code>is the integer 2, then it has to remain a 2. If I don't say, 
+  I am free to change it to be the integer 37 if I want to.</p>
+<p>Contracts are necessary when more than one person is working on different parts 
+  of the same program. Your javadoc comments tell the world what to expect from 
+  your code. You have to say enough so that your code can be used by someone else. 
+  But equally important, you have to <i>not</i> say in the contract anything that 
+  your users don't really need to know, because everything that you tell them, 
+  you are committing to keep that way forever and ever.</p>
+<p>A good craftsman knows his/her tools! Have you explored the BlueJ menus? In 
+  particular, have you ever selected<code> Interface </code>from the drop-down 
+  menu in an editor window? If not, now would be a good time to explore it.</p>
+<p><font size="+1"><b>Due date and grading:</b></font></p>
+<p>Turn in your program via Blackboard by Friday, October 25, before midnight<b>.</b></p>
+<p>Your grade will be the percentage of times that the rabbit escapes the fox. 
+  You are expected to use good style, as defined by <b>Rule 1</b>.</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>
